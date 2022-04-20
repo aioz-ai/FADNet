@@ -1,0 +1,19 @@
+# Pycharm and github
+.idea/
+
+
+# Environment
+env/
+
+# Dataset
+data/
+
+# Graph resuls
+graph_ultils/results/
+
+# Loggs, models and pretrained models/
+loggs/
+pretrained_models/
+
+# Json and plots
+results/
