@@ -5,7 +5,7 @@
 ![Fig-1](misc/FADNet.png)
 *<center>**Figure 1**: The architecture of our Federated Autonomous Driving Net (FADNet).</center>*
 
-This repository is the implementation of a decentralized federated learning approach for Autonomous Driving. We benchmark our method on three public datasets: [Udacity](), [Carla](), and [Gazebo]().
+This repository is the implementation of a decentralized federated learning approach for Autonomous Driving. We benchmark our method on three public datasets: [Udacity](https://www.udacity.com/self-driving-car), Carla, and Gazebo.
 
 For the detail, please refer to [link](https://arxiv.org/abs/2110.05754). 
 
@@ -36,10 +36,10 @@ pip install -r requirements.txt
 ### Datasets
 
 * For GAZEBO dataset, we provide:
-    * The original dataset and the split train/test dataset for GAIA network at [link](). You can download and extract them into "data/driving_gazebo/" folder.
+    * The original dataset and the split train/test dataset for GAIA network at [link](https://vision.aioz.io/f/79afffd7fc444ba9ba0d/?dl=1). You can download and extract them into "data/driving_gazebo/" folder.
 
 * For CARLA dataset, we provide:
-    * The original dataset and the split train/test dataset for GAIA network at [link](). You can download and extract them into "data/driving_carla/" folder.
+    * The original dataset and the split train/test dataset for GAIA network at [link](https://vision.aioz.io/f/9091c519b3904a4695ab/?dl=1). You can download and extract them into "data/driving_carla/" folder.
 
 ### Federated Learning for Autonomous Driving
 
@@ -70,7 +70,7 @@ bash train_gazebo_gaia.sh
 
 ### Pretrained models and Testing
 
-We provide the pretrained models which are trained on GAZEBO dataset with GAIA network by our method at the last epoch. Please download at [link]() and extracted them into the "pretrained_models/DRIVING-GAZEBO_GAIA" folder.
+We provide the pretrained models which are trained on GAZEBO dataset with GAIA network by our method at the last epoch. Please download at [link](https://vision.aioz.io/f/80fec6916dae4e34a397/?dl=1) and extracted them into the "pretrained_models/DRIVING-GAZEBO_GAIA" folder.
 
 The models can be evaluated in GAZEBO train and test set via:
 ```
