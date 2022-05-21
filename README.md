@@ -82,7 +82,12 @@ bash test_gazebo_gaia.sh
 If you use this code as part of any published research, we'd really appreciate it if you could cite the following paper:
 
 ```
-Updating
+@inproceedings{nguyen2022_DFL,
+  title={Deep Federated Learning for Autonomous Driving},
+  author={Nguyen, Anh and Do, Tuong and Tran, Minh and Nguyen, Binh X and Duong, Chien and Phan, Tu and Tjiputra, Erman and Tran, Quang D},
+  booktitle={33rd IEEE Intelligent Vehicles Symposium},
+  year={2022}
+}
 ```
 
 ### License
