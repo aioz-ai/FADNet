@@ -10,6 +10,7 @@ from torch.nn.modules import Module
 from torch.nn.parameter import Parameter
 from torch.nn.modules.utils import _pair
 NUMBER_CLASSES = 1
+FEATURE_SIZE = 6272
 import tqdm
 def conv2d_same_padding(input, weight, bias=None, stride=1, padding=1, dilation=1, groups=1):
 
@@ -123,10 +124,6 @@ class Normalize(nn.Module):
 class FADNet(nn.Module):
     def __init__(self):
         super(FADNet, self).__init__()
-        self.norm = nn.Sequential(
-            Normalize([0.5], [0.5]),
-            nn.ReLU()
-        )
         self.conv1 = Conv2d(1, 32, (5, 5), stride=2)
         self.max_pool1 = nn.MaxPool2d((3, 3), 2)
         self.res_block1 = nn.Sequential(OrderedDict([
@@ -137,57 +134,70 @@ class FADNet(nn.Module):
             ('relu_1', nn.ReLU()),
             ('conv2d_2', Conv2d(32, 32, (3, 3)))
         ]))
-        self.conv2 = Conv2d(32, 32, (1, 1), stride=2)
+        self.conv2 = Conv2d(32, 256, (1, 1), stride=7)
 
         self.res_block2 = nn.Sequential(OrderedDict([
-                ('batch_norm', nn.BatchNorm2d(32)),
-                ('relu', nn.ReLU()),
-                ('conv2d',Conv2d(32, 64, (3,3), stride=2)),
-                ('batch_norm_1', nn.BatchNorm2d(64)),
-                ('relu_1', nn.ReLU()),
-                ('conv2d_2', Conv2d(64, 64, (3, 3)))
-            ]))
-        self.conv3 = Conv2d(32, 64, (1, 1), stride=2)
+            ('batch_norm', nn.BatchNorm2d(32)),
+            ('relu', nn.ReLU()),
+            ('conv2d', Conv2d(32, 64, (3, 3), stride=2)),
+            ('batch_norm_1', nn.BatchNorm2d(64)),
+            ('relu_1', nn.ReLU()),
+            ('conv2d_2', Conv2d(64, 64, (3, 3)))
+        ]))
+        self.conv3 = Conv2d(32, 256, (1, 1), stride=4)
 
         self.res_block3 = nn.Sequential(OrderedDict([
-                ('batch_norm', nn.BatchNorm2d(64)),
-                ('relu', nn.ReLU()),
-                ('conv2d', Conv2d(64, 128, (3,3), stride=2)),
-                ('batch_norm_1', nn.BatchNorm2d(128)),
-                ('relu_1', nn.ReLU()),
-                ('conv2d_2', Conv2d(128, 128, (3, 3)))
-            ]))
-        self.conv4 = Conv2d(64, 128, (1, 1), stride=2)
+            ('batch_norm', nn.BatchNorm2d(64)),
+            ('relu', nn.ReLU()),
+            ('conv2d', Conv2d(64, 128, (3, 3), stride=2)),
+            ('batch_norm_1', nn.BatchNorm2d(128)),
+            ('relu_1', nn.ReLU()),
+            ('conv2d_2', Conv2d(128, 128, (3, 3)))
+        ]))
+        self.conv4 = Conv2d(64, 256, (1, 1), stride=2)
         self.dropout = nn.Dropout2d(p=0.5)
         self.relu = nn.ReLU()
 
-        self.fc = nn.Linear(6272, NUMBER_CLASSES)
+        self.fc_feature = nn.Linear(3, 1)
+        self.fc = nn.Linear(FEATURE_SIZE, NUMBER_CLASSES)
 
     def forward(self, inputs):
-        x1 = self.norm(inputs)
+        x1 = inputs
         x1 = self.conv1(x1)
         x1 = self.max_pool1(x1)
+
         x2 = self.res_block1(x1)
-        x1 = self.conv2(x1)
-        x3 = torch.add(x1, x2)
 
-        x3_1 = x3.view(inputs.shape[0], -1)
+        f1 = self.conv2(x1)
+        f1 = f1.view(inputs.shape[0], -1).reshape(inputs.shape[0], FEATURE_SIZE, -1)
+        # GAP support feature 1
+        f1 = f1.mean(axis=-1)
 
-        x4 = self.res_block2(x3)
-        x3 = self.conv3(x3)
-        x4 = torch.add(x3, x4)
+        x3 = self.res_block2(x2)
 
-        x4_1 = x4.view(inputs.shape[0], -1)
+        f2 = self.conv3(x2)
+        f2 = f2.view(inputs.shape[0], -1).reshape(inputs.shape[0], FEATURE_SIZE, -1)
+        # GAP support feature 2
+        f2 = f2.mean(axis=-1)
 
-        x5 = self.res_block3(x4)
-        x4 = self.conv4(x4)
-        x5 = torch.add(x4, x5)
+        x4 = self.res_block3(x3)
 
-        x6 = x5.view(inputs.shape[0], -1)
-        x6 = self.relu(x6)
-        x6 = self.dropout(x6)
+        f3 = self.conv4(x3)
+        f3 = f3.view(inputs.shape[0], -1).reshape(inputs.shape[0], FEATURE_SIZE, -1)
+        # GAP support feature 3
+        f3 = f3.mean(axis=-1)
 
-        return 0.7*self.fc(x6) + 0.1*x3_1.mean() + 0.1*x4_1.mean() + 0.1*x6.mean()
+        x4 = self.relu(x4)
+        x4 = self.dropout(x4)
+        x4 = x4.view(inputs.shape[0], -1)
+
+        # Support feature Accumulation
+        x_feature = self.fc_feature(torch.stack([f1, f2, f3], axis=2)).squeeze(-1)
+
+        # Aggregation with hadamard product
+        x_final = torch.mul(x4, x_feature)
+        # prediction
+        return self.fc(x_final)
 
 class DrivingNet(Model):
     def __init__(self, criterion, metric, device,

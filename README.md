@@ -48,6 +48,9 @@ Important: Before running any command lines in this section, please run followin
 cd graph_utils
 ```
 And now, you are in 'graph_utils' folder.
+
+Please download graph data at [link](https://github.com/omarfoq/communication-in-cross-silo-fl/tree/main/graph_utils/data) and put into `data` folder.
+
 * To generate networks for GAZEBO dataset and compute the cycle time for them:
     ```
     bash generate_network_driving-gazebo.sh
@@ -70,7 +73,7 @@ bash train_gazebo_gaia.sh
 
 ### Pretrained models and Testing
 
-We provide the pretrained models which are trained on GAZEBO dataset with GAIA network by our method at the last epoch. Please download at [link](https://vision.aioz.io/f/80fec6916dae4e34a397/?dl=1) and extracted them into the "pretrained_models/DRIVING-GAZEBO_GAIA" folder.
+We provide the pretrained models which are trained on GAZEBO dataset with GAIA network by our method at the last epoch. Please download at [link](https://vision.aioz.io/f/92342a18bbb240d5b8e9/?dl=1) and extracted them into the "pretrained_models/DRIVING-GAZEBO_GAIA" folder.
 
 The models can be evaluated in GAZEBO train and test set via:
 ```

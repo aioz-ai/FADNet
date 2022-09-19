@@ -14,7 +14,8 @@ MODEL_SIZE_DICT = {"synthetic": 4354,
                    "sent140": 19269416,
                    "inaturalist": 44961717,
                    "driving_gazebo": 10091936,
-                   "driving_carla": 10091936}
+                   "driving_carla": 10091936,
+                   "driving_udacity": 10091936}
 
 # Model computation time in ms
 COMPUTATION_TIME_DICT = {"synthetic": 1.5,
@@ -23,7 +24,8 @@ COMPUTATION_TIME_DICT = {"synthetic": 1.5,
                          "sent140": 9.8,
                          "inaturalist": 25.4,
                          "driving_gazebo": 4.9,
-                         "driving_carla": 7.2}
+                         "driving_carla": 7.2,
+                         "driving_udacity": 0.66}
 
 
 parser = argparse.ArgumentParser()
