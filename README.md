@@ -73,7 +73,7 @@ bash train_gazebo_gaia.sh
 
 ### Pretrained models and Testing
 
-We provide the pretrained models which are trained on GAZEBO dataset with GAIA network by our method at the last epoch. Please download at [link](https://vision.aioz.io/f/92342a18bbb240d5b8e9/?dl=1) and extracted them into the "pretrained_models/DRIVING-GAZEBO_GAIA" folder.
+We provide the pretrained models which are trained on GAZEBO dataset with GAIA network by our method at the last epoch. Please download at [link](https://vision.aioz.io/f/29c444fca4f8431bb9b9/?dl=1) and extracted them into the "pretrained_models/DRIVING-GAZEBO_GAIA" folder.
 
 The models can be evaluated in GAZEBO train and test set via:
 ```

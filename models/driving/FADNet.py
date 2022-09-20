@@ -109,21 +109,9 @@ class Conv2d(_ConvNd):
 
 # Normalize
 cuda0 = torch.device('cuda:0')
-class Normalize(nn.Module):
-    def __init__(self, mean, std):
-        super(Normalize, self).__init__()
-        self.mean = torch.tensor(mean, device=cuda0)
-        self.std = torch.tensor(std, device=cuda0)
-
-    def forward(self, input):
-        x = input / 255.0
-        x = x - self.mean
-        x = x / self.std
-        return x
-
-class FADNet(nn.Module):
+class FADNet_plus(nn.Module):
     def __init__(self):
-        super(FADNet, self).__init__()
+        super(FADNet_plus, self).__init__()
         self.conv1 = Conv2d(1, 32, (5, 5), stride=2)
         self.max_pool1 = nn.MaxPool2d((3, 3), 2)
         self.res_block1 = nn.Sequential(OrderedDict([
@@ -198,6 +186,95 @@ class FADNet(nn.Module):
         x_final = torch.mul(x4, x_feature)
         # prediction
         return self.fc(x_final)
+
+class FADNet(nn.Module):
+    def __init__(self):
+        super(FADNet, self).__init__()
+        self.conv1 = Conv2d(1, 32, (5, 5), stride=2)
+        self.max_pool1 = nn.MaxPool2d((3, 3), 2)
+        self.res_block1 = nn.Sequential(OrderedDict([
+            ('batch_norm', nn.BatchNorm2d(32)),
+            ('relu', nn.ReLU()),
+            ('conv2d', Conv2d(32, 32, (3, 3), stride=2)),
+            ('batch_norm_1', nn.BatchNorm2d(32)),
+            ('relu_1', nn.ReLU()),
+            ('conv2d_2', Conv2d(32, 32, (3, 3)))
+        ]))
+
+        self.conv2 = Conv2d(32, 32, (1, 1), stride=2)
+        self.conv2_support = Conv2d(32, 256, (1, 1), stride=7)
+
+        self.res_block2 = nn.Sequential(OrderedDict([
+            ('batch_norm', nn.BatchNorm2d(32)),
+            ('relu', nn.ReLU()),
+            ('conv2d', Conv2d(32, 64, (3, 3), stride=2)),
+            ('batch_norm_1', nn.BatchNorm2d(64)),
+            ('relu_1', nn.ReLU()),
+            ('conv2d_2', Conv2d(64, 64, (3, 3)))
+        ]))
+        self.conv3 = Conv2d(32, 64, (1, 1), stride=2)
+        self.conv3_support = Conv2d(32, 256, (1, 1), stride=4)
+
+        self.res_block3 = nn.Sequential(OrderedDict([
+            ('batch_norm', nn.BatchNorm2d(64)),
+            ('relu', nn.ReLU()),
+            ('conv2d', Conv2d(64, 128, (3, 3), stride=2)),
+            ('batch_norm_1', nn.BatchNorm2d(128)),
+            ('relu_1', nn.ReLU()),
+            ('conv2d_2', Conv2d(128, 128, (3, 3)))
+        ]))
+        self.conv4 = Conv2d(64, 128, (1, 1), stride=2)
+        self.conv4_support = Conv2d(64, 256, (1, 1), stride=2)
+
+        self.fc = nn.Linear(7, 7)
+        self.dropout = nn.Dropout2d(p=0.5)
+        self.relu = nn.ReLU()
+
+        self.fc_accumulation = nn.Linear(3, 1)
+
+    def forward(self, inputs):
+        x1 = self.conv1(inputs)
+        x1 = self.max_pool1(x1)
+
+        # Residual block 1
+        x2 = self.res_block1(x1)
+        x2 = torch.add(self.conv2(x1), x2)
+
+        f1 = self.conv2_support(x1)
+        f1 = f1.view(inputs.shape[0], -1).reshape(inputs.shape[0], FEATURE_SIZE, -1)
+        # GAP support feature 1
+        f1 = f1.mean(axis=-1)
+
+        # Residual block 2
+        x3 = self.res_block2(x2)
+        x3 = torch.add(self.conv3(x2), x3)
+
+        f2 = self.conv3_support(x2)
+        f2 = f2.view(inputs.shape[0], -1).reshape(inputs.shape[0], FEATURE_SIZE, -1)
+        # GAP support feature 2
+        f2 = f2.mean(axis=-1)
+
+        # Residual block 3
+        x4 = self.res_block3(x3)
+        x4 = torch.add(self.conv4(x3), x4)
+
+        f3 = self.conv4_support(x3)
+        f3 = f3.view(inputs.shape[0], -1).reshape(inputs.shape[0], FEATURE_SIZE, -1)
+        # GAP support feature 3
+        f3 = f3.mean(axis=-1)
+
+        # FC layer
+        x4 = self.fc(x4)
+        x4 = self.relu(x4)
+        x4 = self.dropout(x4)
+        x4 = x4.view(inputs.shape[0], -1)
+
+        # Support feature - Accumulation
+        f_feature = self.fc_accumulation(torch.stack([f1, f2, f3], axis=2)).squeeze(-1)
+
+        # Aggregation
+        x_final = torch.mul(x4, f_feature)
+        return x_final.mean(axis=1).unsqueeze(1)
 
 class DrivingNet(Model):
     def __init__(self, criterion, metric, device,

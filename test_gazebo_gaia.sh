@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-python3 test.py driving_gazebo --network_name gaia --architecture ring --n_rounds 1000 --bz_train 32 --bz_test 32 --device cuda --local_steps 1 --decay sqrt --test --save_logg_path pretrained_models/DRIVING-GAZEBO_GAIA
+python3 test.py driving_gazebo --network_name gaia --architecture ring --n_rounds 1000 --bz_train 32 --bz_test 32 --device cuda --local_steps 1 --decay sqrt --test --save_logg_path pretrained_models/DRIVING-GAZEBO_GAIA/FADNet
