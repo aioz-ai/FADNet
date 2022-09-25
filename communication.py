@@ -72,13 +72,13 @@ class Network(ABC):
         self.epoch_size = int(train_data_size / self.n_workers)
 
         # create workers models
-        self.workers_models = [get_model(args.experiment, self.device,
+        self.workers_models = [get_model(args.experiment, args.model, self.device,
                                              optimizer_name=self.optimizer_name, lr_scheduler=self.lr_scheduler_name,
                                              initial_lr=self.initial_lr, epoch_size=self.epoch_size)
                                    for w_i in range(self.n_workers)]
 
         # average model of all workers
-        self.global_model = get_model(args.experiment,
+        self.global_model = get_model(args.experiment, args.model,
                                       self.device,
                                       epoch_size=self.epoch_size)
         print_model(self.global_model.net, self.logger_write_param)

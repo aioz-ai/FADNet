@@ -80,6 +80,8 @@ The models can be evaluated in GAZEBO train and test set via:
 bash test_gazebo_gaia.sh
 ```
 
+### [Update 20/09/2022](https://github.com/aioz-ai/FADNet/blob/main/FADNetplus.md)
+
 ### Citation
 
 If you use this code as part of any published research, we'd really appreciate it if you could cite the following paper:

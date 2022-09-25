@@ -22,6 +22,12 @@ def parse_args(args_list=None):
         default='ring'
     )
     parser.add_argument(
+        '--model',
+        choices=['FADNet', 'FADNet_plus'],
+        help='model to use, possible: FADNet, FADNet_plus',
+        default='FADNet'
+    )
+    parser.add_argument(
         "--random_ring_proba",
         type=float,
         help="the probability of using a random ring at each step; only used if architecture is ring",

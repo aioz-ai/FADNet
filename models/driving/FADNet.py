@@ -277,10 +277,13 @@ class FADNet(nn.Module):
         return x_final.mean(axis=1).unsqueeze(1)
 
 class DrivingNet(Model):
-    def __init__(self, criterion, metric, device,
+    def __init__(self, model, criterion, metric, device,
                  optimizer_name="adam", lr_scheduler="sqrt", initial_lr=1e-3, epoch_size=1):
         super(DrivingNet, self).__init__()
-        self.net = FADNet().to(device)
+        if model == "FADNet":
+            self.net = FADNet().to(device)
+        else:
+            self.net = FADNet_plus().to(device)
         self.criterion = criterion
         self.metric = metric
         self.device = device

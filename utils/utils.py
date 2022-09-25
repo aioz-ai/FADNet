@@ -175,7 +175,7 @@ def get_network(network_name, architecture, experiment):
         return nx.from_numpy_matrix(mixing_matrix)
 
 
-def get_model(name, device, epoch_size, optimizer_name="adam", lr_scheduler="custom",
+def get_model(name, model, device, epoch_size, optimizer_name="adam", lr_scheduler="custom",
               initial_lr=1e-3, seed=1234):
     """
     Load Model object corresponding to the experiment
@@ -195,7 +195,7 @@ def get_model(name, device, epoch_size, optimizer_name="adam", lr_scheduler="cus
     if "driving" in name:
         criterion = nn.MSELoss()
         metric = [RMSE]
-        return DrivingNet(criterion, metric, device, optimizer_name, lr_scheduler, initial_lr, epoch_size)
+        return DrivingNet(model, criterion, metric, device, optimizer_name, lr_scheduler, initial_lr, epoch_size)
     else:
         raise NotImplementedError
 
