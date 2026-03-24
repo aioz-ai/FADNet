@@ -36,10 +36,10 @@ pip install -r requirements.txt
 ### Datasets
 
 * For GAZEBO dataset, we provide:
-    * The original dataset and the split train/test dataset for GAIA network at [link](https://vision.aioz.io/f/79afffd7fc444ba9ba0d/?dl=1). You can download and extract them into "data/driving_gazebo/" folder.
+    * The original dataset and the split train/test dataset for GAIA network at [link](https://huggingface.co/datasets/aiozai/DFL_framework/resolve/main/driving_gazebo.zip). You can download and extract them into "data/driving_gazebo/" folder.
 
 * For CARLA dataset, we provide:
-    * The original dataset and the split train/test dataset for GAIA network at [link](https://vision.aioz.io/f/9091c519b3904a4695ab/?dl=1). You can download and extract them into "data/driving_carla/" folder.
+    * The original dataset and the split train/test dataset for GAIA network at [link](https://huggingface.co/datasets/aiozai/DFL_framework/resolve/main/driving_carla.zip). You can download and extract them into "data/driving_carla/" folder.
 
 ### Federated Learning for Autonomous Driving
 
