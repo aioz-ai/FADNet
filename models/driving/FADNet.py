@@ -324,6 +324,7 @@ class DrivingNet(Model):
 
         x = x.to(self.device)
         y = y.unsqueeze(-1).to(self.device)
+        y = y.to(x.dtype)
 
         self.optimizer.zero_grad()
 

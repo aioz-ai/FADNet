@@ -30,10 +30,10 @@ pip install -r requirements.txt
 ### Datasets
 
 * For GAZEBO dataset, we provide:
-    * The original dataset and the split train/test dataset for GAIA network at [link](https://vision.aioz.io/f/79afffd7fc444ba9ba0d/?dl=1). You can download and extract them into "data/driving_gazebo/" folder.
+    * The original dataset and the split train/test dataset for GAIA network at [link](https://huggingface.co/datasets/aiozai/DFL_framework/resolve/main/driving_gazebo.zip). You can download and extract them into "data/driving_gazebo/" folder.
 
 * For CARLA dataset, we provide:
-    * The original dataset and the split train/test dataset for GAIA network at [link](https://vision.aioz.io/f/9091c519b3904a4695ab/?dl=1). You can download and extract them into "data/driving_carla/" folder.
+    * The original dataset and the split train/test dataset for GAIA network at [link](https://huggingface.co/datasets/aiozai/DFL_framework/resolve/main/driving_carla.zip). You can download and extract them into "data/driving_carla/" folder.
 
 ### Federated Learning for Autonomous Driving
 
@@ -57,7 +57,7 @@ Please download graph data at [link](https://github.com/omarfoq/communication-in
 
 ### Pretrained models and Testing
 
-We provide the pretrained models for FADNet_plus which are trained on GAZEBO dataset with GAIA network by our method at the last epoch. Please download at [link](https://vision.aioz.io/f/29c444fca4f8431bb9b9/?dl=1) and extracted them into the "pretrained_models/DRIVING-GAZEBO_GAIA" folder.
+We provide the pretrained models for FADNet_plus which are trained on GAZEBO dataset with GAIA network by our method at the last epoch. Please download at [link](https://huggingface.co/aiozai/FADNet/resolve/main/DRIVING-GAZEBO_GAIA_FADNet_plus.zip) and extracted them into the "pretrained_models/DRIVING-GAZEBO_GAIA" folder.
 
 You can use the "test_gazebo_gaia.sh" file for testing with the pretrained model. However, you need to modify the "--model" and "--save_logg_path" arguments from "FADNet" to "FADNet_plus".
 

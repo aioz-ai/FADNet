@@ -6,10 +6,12 @@
 env/
 
 # Dataset
+data
 data/
 
 # Graph resuls
-graph_ultils/results/
+graph_utils/results
+graph_utils/results/
 
 # Loggs, models and pretrained models/
 loggs/
@@ -17,3 +19,4 @@ pretrained_models/
 
 # Json and plots
 results/
+__pycache__/
